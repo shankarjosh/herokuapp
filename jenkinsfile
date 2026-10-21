@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/shankarjosh/herokuapp.git'
+            }
+        }
+        stage('Clean & Compile') {
+            steps {
+                bat 'mvn clean compile'
+            }
+        }
+        stage('Run BrowserStack Tests') {
+            steps {
+                bat 'mvn test -DsuiteXmlFile=testng.xml'
+            }
+        }
+    }
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+        }
+    }
+}
