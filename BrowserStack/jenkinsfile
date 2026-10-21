@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven' // This must match the exact Name you typed in the Jenkins Tools page
+    }
+    stages {
+        stage('Clean & Compile') {
+            steps {
+                bat 'mvn clean compile'
+            }
+        }
+        stage('Run BrowserStack Tests') {
+            steps {
+                bat 'mvn test -DsuiteXmlFile=testng.xml'
+            }
+        }
+    }
+    post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+        }
+    }
+}
